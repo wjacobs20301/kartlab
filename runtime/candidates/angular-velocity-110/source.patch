@@ -1,0 +1,35 @@
+--- a/src/program/structs/phive.hpp
++++ b/src/program/structs/phive.hpp
+@@ -130,6 +130,19 @@
+             return this->requestSetLinearVelocity(&vel);
+         }
+ 
++        #ifdef TOTK_110
++        // Exact1.1.0 native angular setter, independently checked request50/58 bit8.
++        void requestSetAngularVelocity(sead::Vector3f* velocity) {
++            using impl_t = void (*)(RigidBodyBase*, sead::Vector3f*);
++            auto impl = reinterpret_cast<impl_t>(exl::util::modules::GetTargetStart() + 0x007a4cfc);
++            impl(this, velocity);
++        }
++        void requestSetAngularVelocityXYZ(float x, float y, float z) {
++            auto velocity = sead::Vector3f{x,y,z};
++            requestSetAngularVelocity(&velocity);
++        }
++        #endif
++
+         void applyLinearImpulse(sead::Vector3f* val) {
+             using impl_t = void (RigidBodyBase*, sead::Vector3f*);
+             auto impl = EXL_SYM_RESOLVE<impl_t*>("phive::RigidBodyBase::applyLinearImpulse");
+--- a/src/program/script/globals.cpp
++++ b/src/program/script/globals.cpp
+@@ -1334,6 +1334,10 @@
+         asErrno = engine->RegisterObjectMethod("RigidBody", "string getName()", AngelScript::asMETHOD(phive::RigidBodyBase, getName), AngelScript::asCALL_THISCALL); assert(asErrno >= 0);
+         asErrno = engine->RegisterObjectProperty("RigidBody", "Matrix34f lastTransform", asOFFSET(phive::RigidBodyBase, lastTransform)); assert(asErrno >= 0);
+         asErrno = engine->RegisterObjectProperty("RigidBody", "Matrix34f prevTransform", asOFFSET(phive::RigidBodyBase, prevTransform)); assert(asErrno >= 0);
++        #ifdef TOTK_110
++        asErrno = engine->RegisterObjectMethod("RigidBody", "void setAngularVel(const Vector3f &in)", AngelScript::asMETHOD(phive::RigidBodyBase, requestSetAngularVelocity), AngelScript::asCALL_THISCALL); assert(asErrno >= 0);
++        asErrno = engine->RegisterObjectMethod("RigidBody", "void setAngularVel(float, float, float)", AngelScript::asMETHOD(phive::RigidBodyBase, requestSetAngularVelocityXYZ), AngelScript::asCALL_THISCALL); assert(asErrno >= 0);
++        #endif
+     }
+ 
+     void registerHavok(AngelScript::asIScriptEngine* engine) {

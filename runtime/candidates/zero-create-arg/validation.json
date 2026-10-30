@@ -1,0 +1,40 @@
+{
+  "status": "Tested: original cart physics responds; imported MK kart visibly renders and responds to bounded motion on Ryujinx / TOTK 1.1.0. Hardware and full driving unverified.",
+  "source_sha256": "47190218a43b6000d646fe98931151cbc83c8b773c11d3e85310ef8b3c5d0b13",
+  "candidate_sha256": "59d61add33f737325500a48eb94d35f0d4db59564a99cca60d07459d3fe82841",
+  "candidate_build_id": "79E2653A4AB65A522D6388742C41D62F1B1C56668092EA891A377D478ABB68C8",
+  "hook": "0x64bc8",
+  "stub": "0x21bd70",
+  "stub_hex": "ff6f00f9ff7300f9e10080529423f917",
+  "source_evidence": "ev_1db4e4f5bba71d0e59fc94133843261936e0bf118eafbaa6ad9b6ac2a0e399c8",
+  "validation": [
+    "Original module hash pinned",
+    "All original and new NSO segment hashes pass",
+    "Only one original instruction changes; 16-byte stub appended within existing alignment gap",
+    "Both branch destinations checked",
+    "RO/data bytes, virtual addresses and BSS unchanged",
+    "Clang AArch64 assembler independently matches all three stub data-operation instructions",
+    "hactool --verify: text, rodata and rwdata all GOOD"
+  ],
+  "limits": [
+    "Possible spawn defect; not proven cause of invisible actor",
+    "Binary trial fixes createAndWatchPosRot only; source patch also covers createSimplePosRot",
+    "Observed emulator render/motion/remote input success; seated driving and hardware compatibility remain unverified."
+  ],
+  "runtime_observation": {
+    "log": ".work/ryujinx-zero-create-arg-test.log",
+    "before_motion_position": [
+      -261.096,
+      125.32,
+      -200.835
+    ],
+    "after_motion_position": [
+      -264.978,
+      125.201,
+      -199.897
+    ],
+    "limits": "Original-model visibility was not established in that camera; later imported-model render/motion and remote input passed. General fix causation and hardware remain unverified."
+  },
+  "combined_runtime_receipt": "research/runtime-test-results.json",
+  "native_pad_receipt": "research/native-pad-controller-test.json"
+}

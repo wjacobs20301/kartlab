@@ -1,0 +1,18 @@
+{
+  "status": "Offline candidate pending runtime tests",
+  "source_sha256": "3e22fadc6db15f650ea5bfbe9bed33be79d0259ecdb0150026c5a305425431e2",
+  "candidate_sha256": "10b63b32991595f57c584c40d417ab4605cdc67f3af4753ee0eb443d6b60e2bb",
+  "patched_sites": {
+    "0x19ad8": "tbnz w22,#0,#0x19af0 -> nop"
+  },
+  "validation": [
+    "One original instruction changes; every other text byte identical",
+    "RO/data/BSS and layout unchanged",
+    "Segment hashes recomputed and re-decoded"
+  ],
+  "effect": "Record::currentInput (module+0x3d90b8) holds raw human input even while scripts mutate game input",
+  "limits": [
+    "TAS recording/flattening of injected input no longer captures the injection",
+    "Scripts that read their own input() back through Record::currentInput must simulate instead"
+  ]
+}

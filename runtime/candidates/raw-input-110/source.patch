@@ -1,0 +1,11 @@
+--- a/src/program/main.cpp
++++ b/src/program/main.cpp
+@@ NinJoyNpadDevice_calcHook::Callback
+         bool isInputMutate = lotuskit::tas::Playback::applyCurrentInput(state); // mutate input using current script settings (eg apply user passthrough)
+         bool isGyroMutate = lotuskit::tas::Playback::applyCurrentGyro(state_gyro);
+-        // inject mutated states back into record, so we can re-log final inputs during playback (eg simultaneously playback AS while flattening into nxtas recording)
+-        // FIXME i think recording injected inputs lags+extends inputs a frame due to AS calc interaction with Framework draw/calc frame boundary?
+-        if (isInputMutate) { lotuskit::tas::Record::applyCurrentInput(state); }
++        // KartLab: Record::currentInput stays the player's raw input so scripts can remap controls.
++        (void)isInputMutate;
+         if (isGyroMutate)  { lotuskit::tas::Record::applyCurrentGyro(state_gyro); }

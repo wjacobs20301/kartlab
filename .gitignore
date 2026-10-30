@@ -1,0 +1,54 @@
+# Allow-list: only the mod's own code, scripts and notes. Never game dumps, extracted or converted Nintendo assets,
+# saves, packaged releases or third-party source archives.
+/*
+!/.gitignore
+!/README.md
+!/PROJECT.md
+!/CLAUDE_HANDOFF.md
+!/scripts/
+!/research/
+!/runtime/
+/runtime/dist/
+
+# Small local test tools
+!/.work/
+/.work/*
+!/.work/rider/
+/.work/rider/*
+!/.work/rider/compile_wheels.cpp
+!/.work/tools/
+/.work/tools/*
+!/.work/tools/ryuwin.swift
+!/.work/use_keyboard_input.py
+
+# Never: archives, game formats, media captured from the games
+*.zip
+*.tar.gz
+*.xci
+*.nsp
+*.zs
+*.szs
+*.bfres
+*.bfres.mc
+*.bars
+*.bwav
+*.txtg
+*.png
+*.jpg
+*.wav
+__pycache__/
+.DS_Store
+
+# Public-repo hygiene: no test logs, install receipts, disassembly, extracted game data or old runtime builds.
+# (Research notes in research/*.md are kept; their raw evidence files stay local.)
+*.log
+*.o
+/research/**/*.json
+/research/**/*.txt
+/research/**/*.tsv
+/research/**/*.asm
+/research/placement/
+/research/animation-assets-handoff/
+/research/handling/
+/runtime/candidates/*/subsdk9
+!/runtime/candidates/malloc-lock-110/subsdk9

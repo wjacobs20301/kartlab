@@ -1,0 +1,58 @@
+--- a/src/program/script/schedule.hpp
++++ b/src/program/script/schedule.hpp
+@@ -83,6 +83,7 @@
+ 
+     // push/enqueue
+     AngelScript::asIScriptModule* buildOnceOrGetModule(const std::string& moduleName, const std::string& sectionName, const std::string& scriptText);
++    AngelScript::asIScriptModule* buildOnceOrGetModule(const std::string& moduleName, const std::string& sectionName, const char* scriptText);
+     void pushExecLocalFileModule(const std::string& filename, const std::string& entryPoint, bool doImmediateExecute = true, bool blockOnDebugPause = true);
+     void pushExecLocalFileModuleNXTas(const std::string& filename, bool doImmediateExecute = true, bool blockOnDebugPause = true); // transpile+run nxtas source file in new module
+     void pushExecTextModule(const std::string& moduleName, const std::string& sectionName, const std::string& scriptText, const std::string& entryPoint, bool doImmediateExecute = true, bool blockOnDebugPause = true);
+--- a/src/program/script/schedule.cpp
++++ b/src/program/script/schedule.cpp
+@@ -301,15 +301,20 @@
+                 return;
+             }
+ 
+-            // FIXME larger scripts / text alloc
+-            char scriptBuf[0x2000];
+-            if (lotuskit::util::fs::readTextFile(scriptBuf, sizeof(scriptBuf), filename.c_str())) {
++            // Larger scripts: read into a 64 KiB AngelScript-heap buffer (no extra thread stack,
++            // no exlaunch malloc heap). Fall back to the original stack buffer if allocation fails.
++            char stackBuf[0x2000];
++            char* scriptBuf = static_cast<char*>(lotuskit::script::engine::asAllocImpl(0x10000));
++            s64 scriptBufSize = 0x10000;
++            if (scriptBuf == nullptr) { scriptBuf = stackBuf; scriptBufSize = sizeof(stackBuf); }
++            if (lotuskit::util::fs::readTextFile(scriptBuf, scriptBufSize, filename.c_str())) {
+                 svcOutputDebugString(scriptBuf, strlen(scriptBuf));
++                if (scriptBuf != stackBuf) { lotuskit::script::engine::asFreeImpl(scriptBuf); }
+                 abortStackReq("[tas::schedule::pushExecLocalFileModule] unreadable");
+                 return;
+             }
+-            mod = buildOnceOrGetModule(filename, filename, scriptBuf);
+-            // XXX free scriptBuf
++            mod = buildOnceOrGetModule(filename, filename, static_cast<const char*>(scriptBuf)); // no std::string copy
++            if (scriptBuf != stackBuf) { lotuskit::script::engine::asFreeImpl(scriptBuf); }
+         }
+ 
+         if (mod == nullptr) {
+@@ -439,6 +444,10 @@
+     }
+ 
+     AngelScript::asIScriptModule* buildOnceOrGetModule(const std::string& moduleName, const std::string& sectionName, const std::string& scriptText) {
++        return buildOnceOrGetModule(moduleName, sectionName, scriptText.c_str());
++    }
++
++    AngelScript::asIScriptModule* buildOnceOrGetModule(const std::string& moduleName, const std::string& sectionName, const char* scriptText) {
+         const auto engine = lotuskit::script::engine::asEngine;
+ 
+         // reuse any existing module by name during a single script execution -- do not rebuild/clobber even if scriptText might be different across calls.
+@@ -448,7 +457,7 @@
+         // build in new module
+         mod = engine->GetModule(moduleName.c_str(), AngelScript::asGM_CREATE_IF_NOT_EXISTS);
+         if (mod == nullptr) { return nullptr; } // XXX impossible err?
+-        mod->AddScriptSection(sectionName.c_str(), scriptText.c_str()); // XXX can this fail but still build ok? would leak empty module
++        mod->AddScriptSection(sectionName.c_str(), scriptText); // copies the text // XXX can this fail but still build ok? would leak empty module
+         s32 asErrno = mod->Build(); // Build the module
+         if (asErrno < 0) {
+             // The build failed. The message stream will have received compiler errors that shows what needs to be fixed

@@ -1,0 +1,33 @@
+{
+  "status": "Runtime-validated in Ryujinx 1.3.3; INSTALLED as normal runtime 2026-10-16 (receipt research/large-script-install.json)",
+  "source_sha256": "b0dc2c3bf8b19d95e43c8ad58d3e461d485a2e1ad0b9d2060f843a8a6d80ad06",
+  "candidate_sha256": "3e22fadc6db15f650ea5bfbe9bed33be79d0259ecdb0150026c5a305425431e2",
+  "stub": "0x21beac",
+  "stub_bytes": 160,
+  "script_limit_bytes": 65535,
+  "fallback_limit_bytes": 8191,
+  "patched_sites": {
+    "0x4b9e8": "0x94074131",
+    "0x4ba1c": "0xaa1703e0",
+    "0x4ba28": "0xaa1703e0",
+    "0x4ba30": "0x9407412e",
+    "0x4bab8": "0x14074115"
+  },
+  "buffer": "AngelScript engine heap (asAllocImpl/asFreeImpl), freed after build and on read error",
+  "validation": [
+    "Five original instructions change; every other original text byte identical",
+    "All added bytes fit original text/RO alignment gap",
+    "No object relocations left unresolved",
+    "Every external call/branch target decoded and checked",
+    "Stack frame size (0x2070) unchanged",
+    "RO/data/BSS/layout unchanged",
+    "Original and derived segment hashes pass"
+  ],
+  "limits": [
+    "Exact pinned module and TOTK 1.1.0 only",
+    "pushExecLocalFileModuleNXTas (.nxtas) keeps its 0x2000 buffers",
+    "Logger::dumpTextFileIntoNS and other readTextFile callers unchanged",
+    "Not yet tested on Switch hardware",
+    "Source patch applies on upstream+01-03 but was not compiled with the Switch toolchain"
+  ]
+}

@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import {DriveState,pulseScript} from '../panel/controller.js';
+const s=new DriveState();
+for(let i=0;i<100;i++)s.step(.1,1,0,false);
+assert.equal(s.speed,6);
+for(let i=0;i<10;i++)s.step(.1,1,1,false);
+assert(Math.abs(s.yaw-.75)<1e-9);
+for(let i=0;i<10;i++)s.step(.1,0,0,true);
+assert.equal(s.speed,0);
+for(let i=0;i<100;i++)s.step(.1,-1,0,false);
+assert.equal(s.speed,-6);
+assert.throws(()=>pulseScript(Infinity,0));assert.throws(()=>pulseScript(10,0));
+assert(pulseScript(6,.2).includes('v.y'));
+console.log('PASS: forward/reverse limits, steering, braking, finite commands, vertical velocity preservation.');

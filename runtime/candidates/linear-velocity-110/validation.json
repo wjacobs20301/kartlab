@@ -1,0 +1,18 @@
+{
+  "status": "Offline candidate pending runtime test",
+  "source_sha256": "59d61add33f737325500a48eb94d35f0d4db59564a99cca60d07459d3fe82841",
+  "candidate_sha256": "42f1c503f317df24591482291a4591fbd4a069946e8aeef34ee00b348911980f",
+  "lookup_address": "0x244ab0",
+  "symbol_hash": "0x31abb2c6",
+  "previous_main_offset": "0x7a4cfc",
+  "corrected_main_offset": "0x6bf8f8",
+  "verification": [
+    "All NSO segment hashes verified before/after",
+    "One 32-bit RO lookup value changed",
+    "Text including spawn-initialization fix, data, virtual layout and BSS unchanged"
+  ],
+  "evidence": "research/physics-api-native-110.json",
+  "limits": [
+    "Static native analysis predicts linear behavior; gameplay/hardware not established until tested"
+  ]
+}

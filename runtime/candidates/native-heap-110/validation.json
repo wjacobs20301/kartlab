@@ -1,0 +1,22 @@
+{
+  "status": "Offline candidate pending runtime tests",
+  "source_sha256": "8d838a33fd3aeb84050cf3c5c10bc07308ee762156b96d7b66b23ea5e7b3e8af",
+  "candidate_sha256": "fe1f0d79c4d2c25bd3699bf9461d537d646cf6a7f3e5f3ee6970ec171e7d7bec",
+  "heap_start": "0x2d9000",
+  "heap_limit": "0x3d1000",
+  "heap_bytes": 1015808,
+  "changed_instructions": [
+    "0x21abd0",
+    "0x21abd4",
+    "0x21abe0",
+    "0x21abe4",
+    "0x21abe8",
+    "0x21ac0c",
+    "0x21ac10",
+    "0x21ac14",
+    "0x21ac18"
+  ],
+  "limits": [
+    "LotusKit debug WebSocket server (6-button combo / wsListen) would overwrite the heap"
+  ]
+}

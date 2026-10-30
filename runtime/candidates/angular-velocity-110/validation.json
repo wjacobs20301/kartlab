@@ -1,0 +1,28 @@
+{
+  "status": "Offline candidate pending startup/native steering tests",
+  "source_sha256": "42f1c503f317df24591482291a4591fbd4a069946e8aeef34ee00b348911980f",
+  "candidate_sha256": "b0dc2c3bf8b19d95e43c8ad58d3e461d485a2e1ad0b9d2060f843a8a6d80ad06",
+  "hook": "0x3f15c",
+  "stub": "0x21bd80",
+  "stub_bytes": 297,
+  "new_methods": [
+    "void setAngularVel(const Vector3f &in)",
+    "void setAngularVel(float, float, float)"
+  ],
+  "angular_native_main_offset": "0x7a4cfc",
+  "mainbase": "Existing relocated GOT2c2168 -> s_ModuleInfos +48, mirrors original wrapper",
+  "validation": [
+    "One original instruction changes; epilogue load replayed",
+    "All added bytes fit original text/RO alignment gap",
+    "No object relocations left unresolved",
+    "Local ADR/call relative offsets assembled by Clang",
+    "External branch targets decoded; ADRP disassembly checked",
+    "RO/data/BSS/layout unchanged",
+    "Original and derived segment hashes pass"
+  ],
+  "limits": [
+    "Exact pinned module and TOTK1.1.0 only",
+    "New methods require runtime validation",
+    "Does not implement a mount or steering controller"
+  ]
+}

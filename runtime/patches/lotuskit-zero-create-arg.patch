@@ -1,0 +1,20 @@
+--- a/src/program/util/actor.cpp
++++ b/src/program/util/actor.cpp
+@@ -36,7 +36,7 @@
+         //initInfo.setParam(sead::SafeString{"EquipmentUser_Bow"}, sead::SafeString{"Weapon_Bow_032"});
+         //initInfo.setParam(sead::SafeString{"EquipmentUser_Shield"}, sead::SafeString{"Weapon_Shield_018"});
+         //initInfo.setParam(sead::SafeString{"EquipmentUser_Weapon"}, sead::SafeString{"Weapon_Sword_124"});
+-        engine::actor::BaseProcMgr::CreateArg createArg;
++        engine::actor::BaseProcMgr::CreateArg createArg{};
+         createArg.position = pos;
+         createArg.rotation = rot;
+         createArg.scale = { 1.f, 1.f, 1.f };
+@@ -77,7 +77,7 @@
+         //initInfo.setParam(sead::SafeString{"EquipmentUser_Bow"}, sead::SafeString{"Weapon_Bow_032"});
+         //initInfo.setParam(sead::SafeString{"EquipmentUser_Shield"}, sead::SafeString{"Weapon_Shield_018"});
+         //initInfo.setParam(sead::SafeString{"EquipmentUser_Weapon"}, sead::SafeString{"Weapon_Sword_124"});
+-        engine::actor::BaseProcMgr::CreateArg createArg;
++        engine::actor::BaseProcMgr::CreateArg createArg{};
+         createArg.position = pos;
+         createArg.rotation = rot;
+         createArg.scale = { 1.f, 1.f, 1.f };

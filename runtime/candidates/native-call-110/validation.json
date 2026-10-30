@@ -1,0 +1,26 @@
+{
+  "status": "Offline candidate pending runtime tests",
+  "source_sha256": "10b63b32991595f57c584c40d417ab4605cdc67f3af4753ee0eb443d6b60e2bb",
+  "candidate_sha256": "76dd75fb0436e68b9e60b36ab53003c8caf58df4e9d7bb631d86541f893f411e",
+  "patched_site": "0x41ecc",
+  "stub": "0x21bf4c",
+  "stub_bytes": 172,
+  "ro_strings": [
+    "0x2acd28",
+    "0x2acd76"
+  ],
+  "declarations": [
+    "u64 ptr_call(ptr_t, u64, u64, u64, u64, u64, u64, float, float, float, float)",
+    "float ptr_callf(ptr_t, u64, u64, u64, u64, u64, u64, float, float, float, float)"
+  ],
+  "validation": [
+    "One original instruction changes (tail branch to stub)",
+    "Stub disassembly matches expected listing exactly",
+    "Original RO bytes unchanged; strings appended inside RO last page",
+    "Segment hashes recomputed and re-decoded"
+  ],
+  "limits": [
+    "Calls arbitrary native code: callers must pass valid addresses/arguments",
+    "Integer arguments limited to 6 and float arguments to 4; no struct-by-value"
+  ]
+}

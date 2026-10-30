@@ -1,0 +1,75 @@
+diff --git a/src/mc_Codec.cpp b/src/mc_Codec.cpp
+index b8140d1..ce986f8 100644
+--- a/src/mc_Codec.cpp
++++ b/src/mc_Codec.cpp
+@@ -87,7 +87,7 @@ void MeshCodec::Finalize() {
+ // untested because I have no test cases
+ void NullCodec::Decompress(DecompContext& ctx) {
+     if (mRemainingIndexSize != 0) {
+-        u32 size = std::max(mRemainingIndexSize, 0x40000u);
++        u32 size = std::min(mRemainingIndexSize, 0x40000u);
+         mRemainingIndexSize -= size;
+ 
+         std::memcpy(mIndexOutputBuffer, ctx.currentPos, size);
+@@ -95,7 +95,7 @@ void NullCodec::Decompress(DecompContext& ctx) {
+         ctx.currentPos += size;
+         mIndexOutputBuffer += size;
+     } else {
+-        u32 size = std::max(mRemainingVertexSize, 0x40000u);
++        u32 size = std::min(mRemainingVertexSize, 0x40000u);
+         mRemainingVertexSize -= size;
+ 
+         std::memcpy(mVertexOutputBuffer, ctx.currentPos, size);
+diff --git a/src/mc_Float.cpp b/src/mc_Float.cpp
+index 7c8708d..1ee56c1 100644
+--- a/src/mc_Float.cpp
++++ b/src/mc_Float.cpp
+@@ -2,7 +2,7 @@
+ 
+ #ifdef _MSC_VER
+ #include <intrin.h>
+-#elif defined(__GNUC__)
++#elif defined(__GNUC__) && defined(__x86_64__)
+ #include <xmmintrin.h>
+ #endif
+ 
+@@ -14,7 +14,7 @@ u32 InitFPUState() {
+ #else
+ #if defined(__clang__) || !defined(__GNUC__)  
+     u32 csr;
+-    __asm__("mrs %0, fpcr" : "=r"(csr));
++    __asm__("mrs %x0, fpcr" : "=r"(csr));
+ #else
+     // only gcc appears to have an intrinsic for this
+     u32 csr = __builtin_aarch64_get_fpcr();
+@@ -33,7 +33,7 @@ u32 InitFPUState() {
+     _mm_setcsr(newCsr);
+ #else
+ #if defined(__clang__) || !defined(__GNUC__)
+-    __asm__("msr fpcr, %0" :: "r"(newCsr));
++    __asm__("msr fpcr, %x0" :: "r"(newCsr));
+ #else
+     __builtin_aarch64_set_fpcr(newCsr);
+ #endif
+@@ -46,7 +46,7 @@ void SetFPUState(u32 state) {
+     _mm_setcsr(state);
+ #else
+ #if defined(__clang__) || !defined(__GNUC__)
+-    __asm__("msr fpcr, %0" :: "r"(state));
++    __asm__("msr fpcr, %x0" :: "r"(state));
+ #else
+     __builtin_aarch64_set_fpcr(state);
+ #endif
+diff --git a/src/mc_StackAllocator.cpp b/src/mc_StackAllocator.cpp
+index ab1bd95..c54e33b 100644
+--- a/src/mc_StackAllocator.cpp
++++ b/src/mc_StackAllocator.cpp
+@@ -38,7 +38,7 @@ void* StackAllocator::Alloc(size_t size, s64 alignment) {
+     reinterpret_cast<MemBlock*>(ptr)->GetBlockInfo()->data = (start - mLastAllocationStart) | (start - mMemoryOffset) << 0x1f;
+     mMemoryOffset = end;
+     mLastAllocationStart = start;
+-    mPeakMemoryUsage = std::max(mPeakMemoryUsage, end);
++    mPeakMemoryUsage = std::max(mPeakMemoryUsage, static_cast<size_t>(end));
+ 
+     return ptr;
+ }

@@ -1,0 +1,22 @@
+--- a/syms/exking/phive/RigidBodyBase.py
++++ b/syms/exking/phive/RigidBodyBase.py
+@@ -22,7 +22,7 @@
+ EXKING("phive::RigidBodyBase::requestSetLinearVelocity", {
+     TOTK_100: 0x00661dc0,
+     #TOTK_100: 0x00751574, # XXX this is angvel
+-    TOTK_110: 0x007a4cfc,
++    TOTK_110: 0x006bf8f8,
+     TOTK_121: 0x00acc874,
+ })
+ 
+--- a/syms/output/TOTK_110/syms_exl_reloc.inc
++++ b/syms/output/TOTK_110/syms_exl_reloc.inc
+@@ -173,7 +173,7 @@
+ { util::ModuleIndex::Main, 0x00c2c050, "phive::RigidBodyBase::getBoundingBoxWorld" },
+ { util::ModuleIndex::Main, 0x02a9750c, "phive::RigidBodyBase::getName" },
+ { util::ModuleIndex::Main, 0x011bb3b8, "phive::RigidBodyBase::getNextLinearVelocity" },
+-{ util::ModuleIndex::Main, 0x007a4cfc, "phive::RigidBodyBase::requestSetLinearVelocity" },
++{ util::ModuleIndex::Main, 0x006bf8f8, "phive::RigidBodyBase::requestSetLinearVelocity" },
+ { util::ModuleIndex::Main, 0x006ee2f8, "phive::RigidBodyEntity::getActorLink" },
+ { util::ModuleIndex::Main, 0x00b51918, "sead::FrameHeap::create" },
+ { util::ModuleIndex::Main, 0x00a8b40c, "sead::LookAtCamera::doUpdateMatrix" },

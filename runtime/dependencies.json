@@ -1,0 +1,16 @@
+{
+  "totk": {
+    "version": "1.1.0",
+    "title_id": "0100F2C0115B6000",
+    "main_build_id": "D5AD6AC71EF53E3E52417C1B81DBC9B4142AA3B3000000000000000000000000"
+  },
+  "lotuskit": {
+    "repository": "https://github.com/aquacluck/totk-lotuskit",
+    "commit": "59dcfccd77b6d4bcfa718bff806bc55be640edb7",
+    "local_source": ".tools/totk-runtime/lotuskit",
+    "compile_version": 110,
+    "upstream_compatibility_status": "1.1.0 builds are untested and unsupported by upstream",
+    "license": "GPL-2.0"
+  },
+  "prototype_status": "source scripts; host syntax/logic checks only; no in-game execution"
+}
