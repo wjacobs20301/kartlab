@@ -39,3 +39,9 @@ some notes mention files that are not here).
   `runtime/candidates/*/source.patch` and the binary patch scripts `scripts/patch_lotuskit_*.py`.
 * Format knowledge comes from community tools credited in the notes (Switch-Toolbox, MK8-Parts-Bin-Converter,
   BlenderBfresImporter, MeshCodec, the TOTK modding community).
+
+## License
+
+GPL-2.0 (see `LICENSE`), the same license as totk-lotuskit, which this mod is built on. You are free to use, change and
+share it; if you share a modified version, share its source under the same license. The license covers this
+repository's code only: game files and anything converted from them belong to Nintendo and are not covered.
