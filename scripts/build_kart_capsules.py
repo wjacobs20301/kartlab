@@ -20,7 +20,7 @@ from PIL import Image, ImageFilter
 import zstandard as zstd
 from inspect_native_rider import sarc
 from build_native_mount_submodel import pack_sarc
-from build_kart_variant import rstb_set, MOD, TABLE
+from build_kart_variant import rstb_set, MOD, TABLE, base_rstb
 from kart_assets_colors import tegra_addresses
 import byml_rw, msbt_rw
 
@@ -115,7 +115,7 @@ def compose(capsule, kart):
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument('--rstb', type=Path); args = ap.parse_args()
     dicts = zs_dicts(); rom = OUT / 'romfs'; report = {}
-    raw = bytearray(zstd.ZstdDecompressor().decompress((args.rstb or MOD / TABLE).read_bytes(), max_output_size=64 << 20))
+    raw = bytearray(zstd.ZstdDecompressor().decompress(base_rstb(args.rstb).read_bytes(), max_output_size=64 << 20))
     vanilla_rstb = bytearray(zstd.ZstdDecompressor().decompress((ROM / TABLE).read_bytes(), max_output_size=64 << 20))
 
     def vanilla_entry(path):

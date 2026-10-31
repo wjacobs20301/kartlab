@@ -18,7 +18,7 @@ stick (verified in game, .work/ryujinx-handle-probe.log). This candidate:
 Euler convention (nn::g3d EULER_XYZ, column vectors): R = Rz(z) * Ry(y) * Rx(x). Verified against the
 runtime Handle_J record under UpDown pitch. Inputs are the currently installed assets.
 """
-import hashlib, io, json, math, struct, subprocess
+import hashlib, io, json, math, os, struct, subprocess
 import numpy as np
 import kart_assets_native_cart as n  # adds the project-local dependency paths
 import zstandard as zstd
@@ -135,7 +135,8 @@ def main():
     # Inputs must be exactly what is installed today.
     for name, src in ((CART, CART_SRC / 'romfs/Model' / CART), (HOST, GRIP_SRC / 'romfs/Model' / HOST),
                       (ANIM, GRIP_SRC / 'romfs/Model' / ANIM)):
-        assert src.read_bytes() == (INSTALLED / name).read_bytes(), f'input differs from installed: {name}'
+        if (INSTALLED / name).exists() and os.environ.get('RIM_CHECK_INSTALLED'):   # dev check against an installed build
+            assert src.read_bytes() == (INSTALLED / name).read_bytes(), f'input differs from installed: {name}'
         report['inputs'][name] = {'source': str(src.relative_to(ROOT)), 'sha256': sha(src.read_bytes())}
 
     # ---- Cart: find and remove the steering-wheel pieces (near LOD) ----

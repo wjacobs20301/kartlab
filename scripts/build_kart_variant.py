@@ -89,8 +89,16 @@ def bike_layout(bm):
     shift = np.array([0, BIKE_GROUND + BIKE_TIRE_RADIUS - front[1], BIKE_SHIFT_Z])
     return dict(bones=bones, steer=steer, fork_top=fork_top, pivot=piv, swing=swing, shift=shift,
                 front=front + shift, rear=rear + shift)
-MOD = Path.home() / 'Library/Application Support/Ryujinx/mods/contents/0100f2c0115b6000/KartLab_110/romfs'
+MOD = Path.home() / 'Library/Application Support/Ryujinx/mods/contents/0100f2c0115b6000/KartLab_110/romfs'   # installed mod (dev tools only)
 TABLE = 'System/Resource/ResourceSizeTable.Product.110.rsizetable.zs'
+
+
+def base_rstb(arg=None):
+    """Size table a builder starts from: --rstb, else $KART_RSTB_BASE, else the vanilla game's. Builders only raise or
+    insert entries, so scripts/assemble_mod.py merges every builder's table (max per entry) into the final one."""
+    if arg: return Path(arg)
+    if os.environ.get('KART_RSTB_BASE'): return Path(os.environ['KART_RSTB_BASE'])
+    return ROOT / 'extracted/totk/romfs' / TABLE
 BASE_ACTOR = 'SpObj_ControlStick_A_01'
 S = 8; SIZE = 256 * S
 
@@ -321,7 +329,7 @@ def main():
     subprocess.run([str(ROOT / '.tools/kart-assets/MeshCodec/build/tests/mc_test'), str(rom / 'Model'), str(chk)], check=True, capture_output=True)
     assert (chk / model_file.removesuffix('.mc')).read_bytes() == bytes(data)
     # ---- HD albedo ----
-    ref = read_txtg((MOD / 'TexToGo/Etc_ZonauCart_A_Alb.txtg').read_bytes())
+    ref = read_txtg((ROOT / 'assets/kart-texture-hd/romfs/TexToGo/Etc_ZonauCart_A_Alb.txtg').read_bytes())   # header template
     big = atlas.image(body_img, tire_img, arm_img, S); big.save(OUT / 'atlas-preview.png')
     mips = SIZE.bit_length(); surfaces = []
     for i in range(mips):
@@ -335,7 +343,7 @@ def main():
     # ---- actor pack ----
     pk = sarc(zstd.ZstdDecompressor().decompress((ROOT / 'extracted/totk/romfs/Pack/ZsDic.pack.zs').read_bytes()))
     dic = zstd.ZstdCompressionDict(pk['pack.zsdic'])
-    base_pack = Path(os.environ['KART_BASE_PACK']) if os.environ.get('KART_BASE_PACK') else MOD / f'Pack/Actor/{BASE_ACTOR}.pack.zs'   # the kart pack the variant copies
+    base_pack = Path(os.environ['KART_BASE_PACK']) if os.environ.get('KART_BASE_PACK') else ROOT / f'assets/kart-grip/romfs/Pack/Actor/{BASE_ACTOR}.pack.zs'   # the kart pack the variant copies
     kart = dict(sarc(zstd.ZstdDecompressor(dict_data=dic).decompress(base_pack.read_bytes(), max_output_size=64 << 20)))
     actor = f'SpObj_ControlStick_A_0{slot}'; A01 = BASE_ACTOR.encode(); AX = actor.encode()
     # Start from the vanilla A_0<slot> pack (an actor whose ActorParam has $parent A_01 and its own AI/event members:
@@ -444,7 +452,7 @@ def main():
     assert sarc(zstd.ZstdDecompressor(dict_data=dic).decompress(pack_bytes, max_output_size=64 << 20)) == members
     (rom / 'Pack/Actor').mkdir(parents=True, exist_ok=True); (rom / f'Pack/Actor/{actor}.pack.zs').write_bytes(pack_bytes)
     # ---- RSTB ----
-    src_table = args.rstb or (MOD / TABLE)
+    src_table = base_rstb(args.rstb)
     raw = bytearray(zstd.ZstdDecompressor().decompress(src_table.read_bytes(), max_output_size=64 << 20))
     cart_alloc = 193464   # decoded allocation of every SpObj_Cart_A model built on the native host (unchanged)
     assert len(data) <= cart_alloc + 4096

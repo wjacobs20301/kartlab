@@ -13,7 +13,7 @@ from pathlib import Path
 import zstandard as zstd
 from inspect_native_rider import sarc
 import byml_rw
-from build_kart_variant import rstb_set, MOD, TABLE
+from build_kart_variant import rstb_set, MOD, TABLE, base_rstb
 
 ROOT = Path(__file__).resolve().parents[1]
 CAP = 'SpObj_ControlStick_Capsule_A_0{}'; DEV = 'SpObj_ControlStick_A_0{}'
@@ -49,7 +49,7 @@ def main():
     ap = argparse.ArgumentParser(); ap.add_argument('--rstb', type=Path); args = ap.parse_args()
     pk = sarc(zstd.ZstdDecompressor().decompress((ROOT / 'extracted/totk/romfs/Pack/ZsDic.pack.zs').read_bytes()))
     dic = zstd.ZstdCompressionDict(pk['zs.zsdic'])
-    src_table = args.rstb or (MOD / TABLE)
+    src_table = base_rstb(args.rstb)
     raw = bytearray(zstd.ZstdDecompressor().decompress(src_table.read_bytes(), max_output_size=64 << 20))
     report = {}
     for t in TABLES:

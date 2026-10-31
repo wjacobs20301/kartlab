@@ -13,7 +13,7 @@ from pathlib import Path
 import zstandard as zstd
 from inspect_native_rider import sarc
 import byml_rw
-from build_kart_variant import rstb_set, MOD, TABLE
+from build_kart_variant import rstb_set, MOD, TABLE, base_rstb
 
 ROOT = Path(__file__).resolve().parents[1]
 ROM = ROOT / 'extracted/totk/romfs'
@@ -53,7 +53,7 @@ def main():
     assert byml_rw.read(data)[0] == tree
     out = OUT / 'romfs' / (REL + '.zs'); out.parent.mkdir(parents=True, exist_ok=True)
     out.write_bytes(zstd.ZstdCompressor(level=19, dict_data=dic).compress(data))
-    raw = bytearray(zstd.ZstdDecompressor().decompress((args.rstb or MOD / TABLE).read_bytes(), max_output_size=64 << 20))
+    raw = bytearray(zstd.ZstdDecompressor().decompress(base_rstb(args.rstb).read_bytes(), max_output_size=64 << 20))
     raw, e = rstb_set(raw, REL, ((len(data) + 31) & ~31) + 0x1000, True)
     (OUT / 'romfs' / TABLE).parent.mkdir(parents=True, exist_ok=True)
     (OUT / 'romfs' / TABLE).write_bytes(zstd.ZstdCompressor(level=19).compress(bytes(raw)))

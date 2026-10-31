@@ -18,7 +18,8 @@ ROOT = Path(__file__).resolve().parents[1]
 TOOL = ROOT / '.tools/hactool/hactool'
 OUT = ROOT / 'extracted'
 WORK = ROOT / '.work/extraction'
-KEYDIR = Path.home() / 'Library/Application Support/Ryujinx/system'
+# prod.keys / title.keys: $SWITCH_KEYS_DIR, else Ryujinx's key folder (macOS)
+KEYDIR = Path(os.environ.get('SWITCH_KEYS_DIR', Path.home() / 'Library/Application Support/Ryujinx/system'))
 ENV = dict(os.environ, TOTK_MOD_KEY_DIR=str(KEYDIR))
 
 
@@ -54,9 +55,13 @@ def containers():
         'mk8dx': Path(os.environ.get('MK8DX_XCI', ROOT / 'mk8dx.xci')),        # your own dump
         'totk-base': Path(os.environ.get('TOTK_XCI', ROOT / 'totk.xci')),     # your own dump
     }
-    update_config = (Path.home() / 'Library/Application Support/Ryujinx/games/'
-                     '0100f2c0115b6000/updates.json')
-    sources['totk-update'] = Path(json.loads(update_config.read_text())['selected'])
+    # TOTK 1.1.0 update (.nsp): $TOTK_UPDATE, else the update selected in Ryujinx (macOS)
+    if os.environ.get('TOTK_UPDATE'):
+        sources['totk-update'] = Path(os.environ['TOTK_UPDATE'])
+    else:
+        update_config = (Path.home() / 'Library/Application Support/Ryujinx/games/'
+                         '0100f2c0115b6000/updates.json')
+        sources['totk-update'] = Path(json.loads(update_config.read_text())['selected'])
     if not sources['totk-update'].is_file():
         raise RuntimeError('The selected TOTK update is unavailable')
     manifest = {}

@@ -1,0 +1,33 @@
+diff --git a/extkeys.c b/extkeys.c
+index 67ee48a..4095cc4 100644
+--- a/extkeys.c
++++ b/extkeys.c
+@@ -468,6 +468,10 @@ int settings_has_titlekey(hactool_settings_t *settings, const unsigned char *rig
+ }
+ 
+ void settings_add_titlekey(hactool_settings_t *settings, const unsigned char *rights_id, const unsigned char *titlekey) {
++    titlekey_entry_t *existing_key = settings_get_titlekey(settings, rights_id);
++    if (existing_key != NULL && memcmp(existing_key->titlekey, titlekey, 0x10) == 0) {
++        return; /* Identical duplicate entries in the emulator's title.keys. */
++    }
+     if (settings_has_titlekey(settings, rights_id)) {
+         fprintf(stderr, "Error: Rights ID ");
+         for (unsigned int i = 0; i < 0x10; i++) {
+diff --git a/utils.c b/utils.c
+index 3d40bbb..2d13691 100644
+--- a/utils.c
++++ b/utils.c
+@@ -262,6 +262,13 @@ const char *get_key_revision_summary(uint8_t key_rev) {
+ FILE *open_key_file(const char *prefix) {
+     filepath_t keypath;
+     filepath_init(&keypath);
++    /* Local extraction: read the emulator's existing key directory directly. */
++    const char *task_key_dir = getenv("TOTK_MOD_KEY_DIR");
++    if (task_key_dir != NULL) {
++        filepath_set(&keypath, task_key_dir);
++        filepath_append(&keypath, "%s.keys", prefix);
++        return os_fopen(keypath.os_path, OS_MODE_READ);
++    }
+     /* Use $HOME/.switch/prod.keys if it exists */
+     char *home = getenv("HOME");
+     if (home == NULL)

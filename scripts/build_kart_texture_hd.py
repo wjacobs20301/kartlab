@@ -45,7 +45,7 @@ def atlas():
 
 
 def main():
-    ref = read_txtg((MOD / TEX).read_bytes())
+    ref = read_txtg((ROOT / 'assets/source-native-assembly-mod/romfs' / TEX).read_bytes())   # the 256^2 atlas it replaces
     assert (ref['width'], ref['height'], ref['format']) == (256, 256, 0x302)
     image = atlas()
     mips = SIZE.bit_length()          # 2048 -> 12 levels down to 1x1
@@ -64,8 +64,9 @@ def main():
     check = read_txtg(data)
     assert (check['width'], check['height'], check['mips']) == (SIZE, SIZE, mips) and check['surfaces'] == surfaces
     decoded = decomp_bc1(deswizzle(check['surfaces'][0], SIZE, SIZE), SIZE, SIZE)
-    # Resource size table: copy the installed table, raise the one texture entry.
-    raw = bytearray(zstd.ZstdDecompressor().decompress((MOD / TABLE).read_bytes(), max_output_size=64 << 20))
+    # Resource size table: copy the base table (vanilla unless $KART_RSTB_BASE), raise the one texture entry.
+    from build_kart_variant import base_rstb
+    raw = bytearray(zstd.ZstdDecompressor().decompress(base_rstb().read_bytes(), max_output_size=64 << 20))
     assert raw[:6] == b'RESTBL'
     count = struct.unpack_from('<I', raw, 14)[0]
     key = zlib.crc32(TEX.encode())

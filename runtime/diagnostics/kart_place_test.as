@@ -824,7 +824,7 @@ _d133(90);_d226(uint64(A));_d133(50);_d226(uint64(A));_d133(30);
 _L("PLC chests");
 for(uint i=0;i<4;i++){
 Player.setRot(0,0,1,0,1,0,-1,0,0);input(2,0);Player.setPos(-138.0f+0.0f*i,Player.pos_y+0.3f,-48.0f-7.0f*i);input(40,0);
-_d175(i,(i==0?0:i==1?1:i==2?1:i==3?0:0),(i==0?4:i==1?1:i==2?0:i==3?3:0),"kart");
+_d175(i,(i==0?0:i==1?1:i==2?0:i==3?1:0),(i==0?4:i==1?0:i==2?3:i==3?1:0),"kart");
 }
 _L("PLC finished");_d194=false;input(1,0);_k11(tp);
 }

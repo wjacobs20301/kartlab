@@ -36,7 +36,7 @@ RET = ROOT / 'extracted/totk/romfs'
 BANK = 'Sound/Resource/SpObj_ControlStick_A_01.bars.zs'
 DB = 'SLink2/slink2.Product.110.bslnk.zs'
 TABLE = 'System/Resource/ResourceSizeTable.Product.110.rsizetable.zs'
-TABLE_SRC = ROOT / 'assets/kart-glider/romfs' / TABLE          # installed RSTB
+TABLE_SRC = ROOT / 'assets/kart-glider-v2/romfs' / TABLE       # glider build's RSTB (merged later)
 SLOTS = {   # bank asset suffix -> (MK8 bank, MK8 asset, key the controller plays)
     'Steering_03': ('Audio/Static/StaticKart.bars', 'SE_KT_DASH_MINI', 'TiltedStick_00'),
     'Steering_05': ('Audio/Static/StaticKart.bars', 'SE_KT_DASH_MINI_ULTRA', 'TiltedStick_01'),

@@ -4,6 +4,15 @@ Updated October 16, 2026. Workspace: `<repo>`.
 
 ## CURRENT STATE (Claude, October 16, 2026, late) — read this first
 
+> **Newest (Oct 30): reproducible build.** From a fresh clone: `scripts/setup_tools.sh` (pinned tools into .tools/),
+> `scripts/extract_games.py` stages, `scripts/build_mod.sh [--install]` (every step in order; `FROM="<step>"` resumes;
+> `scripts/prepare_inputs.py` makes the formerly hand-made inputs; `scripts/assemble_mod.py` collects build/ and merges
+> the size tables of every step, including table-only ones — leaving the cart sub-model/physics tables out made every
+> kart crash on creation). Verified Oct 30: fresh clone + setup + build gives 46/47 files byte-identical to the
+> installed mod (size table differs only by stale old entries); that build is now installed and all four karts spawn,
+> mount and place from the inventory. Builders no longer read the installed mod (`base_rstb()`, vanilla by default).
+> Guide: docs/BUILDING.md. Repo: github.com/wjacobs20301/kartlab (public, GPL-2.0).
+
 > **Newest (Oct 19): placement/seat/sliding fixes INSTALLED** — variants are new actors A_06 Pipe Frame, A_05 B Dasher,
 > A_04 Bike (vanilla A_02/A_03 untouched); Standard Kart texture restored (stray file); grippy Material_Stone_ZonauLight
 > tyres; variant steering wheels removed, Pipe Frame seat, bike hands on grips. Rebuild everything with

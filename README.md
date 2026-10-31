@@ -20,13 +20,16 @@ related names are trademarks of Nintendo.
 
 ## Building
 
-1. Put your game dumps in the repo root as `totk.xci` and `mk8dx.xci` (or set `TOTK_XCI` / `MK8DX_XCI`), then run
-   `scripts/extract_games.py` (needs [hactool](https://github.com/SciresM/hactool) and your own keys).
-2. Build the assets: `scripts/rebuild_all_karts.sh` (karts, capsules, chests, size table) plus the
-   `scripts/build_*.py` steps it relies on (glider, sounds, pose, textures); `scripts/check_mod_sizes.py` checks the
-   result.
-3. Controller script: `runtime/candidates/native-rider-wheels/controller.src.as`, built into `autorun.as` with
-   `scripts/build_native_wheels.py`.
+Full guide: **[docs/BUILDING.md](docs/BUILDING.md)**. In short, with your own TOTK 1.1.0 and MK8DX 1.7.1 dumps and keys:
+
+```bash
+scripts/setup_tools.sh                    # fetch and build the pinned third-party tools into .tools/
+python3 scripts/extract_games.py containers   # then: metadata, export, verify
+scripts/build_mod.sh --install            # build everything into build/ and install into Ryujinx (macOS)
+```
+
+The kart controller is `runtime/candidates/native-rider-wheels/controller.src.as` (built into `autorun.as` by
+`scripts/build_native_wheels.py`).
 
 Start with `CLAUDE_HANDOFF.md` (newest state at the top) for the full picture; it and `PROJECT.md` are development
 logs. Research notes are in `research/` (raw logs, test receipts and extracted-data dumps are kept out of the repo, so
